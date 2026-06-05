@@ -67,38 +67,75 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
 ## 🚀 How to Run the Application
 
 ### Option 1: Running with Docker Compose (Recommended)
-You can launch the entire stack (Database, Cache, and all Microservices) in one command:
 
-1. **Build backend packages**:
+To run the application using Docker, **Docker must be installed, and the Docker Engine/Desktop must be opened and in a running state**.
+
+1. **Build backend packages (JAR)**:
+   Since each service is a separate Maven project, the `clean package` script must be run inside each microservice's root directory. Run the following commands:
    ```bash
-   cd backend
-   mvn clean package -DskipTests
+   cd backend/1001_EurekaServer && mvn clean package -DskipTests
+   cd ../1021_Config_Server_Eureka && mvn clean package -DskipTests
+   cd ../Pizza_Producer && mvn clean package -DskipTests
+   cd ../Pizza_Consumer && mvn clean package -DskipTests
    ```
+   You will get the JAR files in the target folder of each microservice.
+   Example: `backend/Pizza_Producer/target/Pizza_Producer-0.0.1-SNAPSHOT.jar`
+
+   > [!IMPORTANT]
+   > **Code Changes**: Whenever you make any changes to the source code of any backend microservice, you must re-run the respective `mvn clean package` command to generate the latest JAR files before running Docker Compose to ensure the changes are reflected.
+
 2. **Build and start containers**:
+   Navigate back to the `backend/` directory and start the services using Docker Compose:
    ```bash
+   cd ..
    docker compose up --build -d
    ```
-3. **Start the Frontend development server**:
-   ```bash
-   cd ../frontend
-   npm install
-   npm start
-   ```
+3. **Monitor and Manage Containers**:
+   * **Docker Desktop**: You can view and manage the running containers and images directly in the **Docker Desktop** app.
+   * **Stopping the application**: To stop and bring down the running containers, run the following command in the `backend/` directory:
+     ```bash
+     docker compose down
+     ```
 
-### Option 2: Running Locally (For Development)
-Ensure you have **MySQL** and **Redis** running locally on their default ports.
+---
 
-1. **Eureka Registry**: Run the main application in `backend/1001_EurekaServer`.
-2. **Config Server**: Run `backend/1021_Config_Server_Eureka`. It will read configuration from `backend/GitFiles`.
-3. **Pizza Producer**: Run `backend/Pizza_Producer`.
-4. **Pizza Consumer**: Run `backend/Pizza_Consumer`.
-5. **Angular App**: Start the frontend development server:
+### Option 2: Running Locally (Without Docker)
+
+To run the services locally without containerization:
+
+1. **Prerequisites & Databases Setup**:
+   * **Redis**: Ensure a Redis instance is running locally on port `6379`.
+   * **MySQL Setup**: A local MySQL server instance running on port `3306` is required:
+     * Create a database named `pizza_db`.
+     * Ensure the username is `root` and password is `raja` (default credentials). If using different credentials, update them in [pizzaproducer.properties](file:///d:/Git%20projects/Dummynos/backend/GitFiles/pizzaproducer.properties).
+     * Initialize the schema by executing the SQL script found in [Pizza.sql](file:///d:/Git%20projects/Dummynos/backend/Pizza_Producer/src/main/resources/Pizza.sql).
+2. **Run Backend Services**:
+   Start each of the backend services individually in your IDE or from the command line in the following order:
+   * **Eureka Registry**: Run the main application in `backend/1001_EurekaServer`.
+   * **Config Server**: Run `backend/1021_Config_Server_Eureka` (reads configuration from `backend/GitFiles`).
+   * **Pizza Producer**: Run `backend/Pizza_Producer`.
+   * **Pizza Consumer**: Run `backend/Pizza_Consumer`.
+
+---
+
+### 🖥️ Running the Angular Frontend (Common to both options)
+
+Once the backend services are up and running (either via Docker Compose or running locally), start the Angular application:
+
+1. Navigate to the frontend directory:
    ```bash
    cd frontend
+   ```
+2. Install the frontend dependencies:
+   ```bash
    npm install
+   ```
+3. Start the frontend development server:
+   ```bash
    npm start
    ```
-   Open **`http://localhost:4200`** in your browser.
+4. Access the web application in your browser at:
+   **`http://localhost:4200`**
 
 ---
 
@@ -110,7 +147,7 @@ Ensure you have **MySQL** and **Redis** running locally on their default ports.
   * **JSON Body**:
     ```json
     {
-      "pizzaName": "VegMedium",
+      "pizzaName": "BBQ Chicken",
       "quantity": 2,
       "bill": 400.0,
       "customerContactNumber": "9543214753"
