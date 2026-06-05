@@ -105,9 +105,9 @@ services:
       - private-net
       - public-net
     ports:
-      - "8082:8082"
+      - "8090:8090"
     environment:
-      SERVER_PORT: 8082  # Forces consumer to run on port 8082 inside container
+      SERVER_PORT: 8090  # Forces consumer to run on port 8090 inside container (in-case config server failed)
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:7090/eureka/
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
       EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"

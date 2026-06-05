@@ -50,7 +50,7 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
 * **`backend/1001_EurekaServer`**: Service Registration and Discovery server (running on port `7090`).
 * **`backend/1021_Config_Server_Eureka`**: Config Server hosting dynamic properties in `native` (local file-system) profile (running on port `8888`).
 * **`backend/GitFiles`**: Configuration properties files read by the Config Server.
-* **`backend/Pizza_Consumer`**: Client-facing public gateway service (running on port `8090` locally / port `8082` in Docker).
+* **`backend/Pizza_Consumer`**: Client-facing public gateway service (running on port `8090`).
 * **`backend/Pizza_Producer`**: Internal business service connected to MySQL and Redis (isolated from public traffic).
 
 ---
@@ -105,20 +105,19 @@ Ensure you have **MySQL** and **Redis** running locally on their default ports.
 ## 🧪 Quick Test Endpoints
 
 * **Eureka Server Console**: `http://localhost:7090`
-* **API Endpoints (via Consumer Gateway)**:
-  * **GET All Pizza Orders**: `GET http://localhost:8090/pizza/controller/getPizzaDetails`
-  * **ADD Pizza Order**: `PUT http://localhost:8090/pizza/controller/addPizza`
-    * **JSON Body**:
-      ```json
-      {
-        "pizzaName": "VegMedium",
-        "quantity": 2,
-        "bill": 400.0,
-        "customerContactNumber": "9543214753"
-      }
-      ```
-  * **GET Orders by Pizza Name**: `POST http://localhost:8090/pizza/controller/getDetailsByPizzaName/{pizzaName}`
-    * Example: `POST http://localhost:8090/pizza/controller/getDetailsByPizzaName/VegMedium`
-  * **GET Orders by Contact Number**: `POST http://localhost:8090/pizza/controller/getDetailsByContactNumber/{contactNumber}`
-    * Example: `POST http://localhost:8090/pizza/controller/getDetailsByContactNumber/9543214753`
+* **GET All Pizza Orders**: `GET http://localhost:8090/pizza/controller/getPizzaDetails`
+* **ADD Pizza Order**: `PUT http://localhost:8090/pizza/controller/addPizza`
+  * **JSON Body**:
+    ```json
+    {
+      "pizzaName": "VegMedium",
+      "quantity": 2,
+      "bill": 400.0,
+      "customerContactNumber": "9543214753"
+    }
+    ```
+* **GET Orders by Pizza Name**: `POST http://localhost:8090/pizza/controller/getDetailsByPizzaName/{pizzaName}`
+  * Example: `POST http://localhost:8090/pizza/controller/getDetailsByPizzaName/VegMedium`
+* **GET Orders by Contact Number**: `POST http://localhost:8090/pizza/controller/getDetailsByContactNumber/{contactNumber}`
+  * Example: `POST http://localhost:8090/pizza/controller/getDetailsByContactNumber/9543214753`
 
