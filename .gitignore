@@ -1,0 +1,33 @@
+# IDEs and Editors
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.metadata/
+
+# Build and compiled output
+**/target/
+**/dist/
+**/out-tsc/
+**/bazel-out/
+/bin/
+/tmp/
+
+# Dependency directories
+**/node_modules/
+**/.angular/
+
+# Log files
+*.log
+producer.log
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# Compiled class files
+*.class

@@ -1,0 +1,15 @@
+<nav class="navbar glass-dark">
+  <div class="container nav-container">
+    <a routerLink="/" class="brand">
+      <span class="text-gradient">Dummynos</span>
+    </a>
+    
+    <ul class="nav-links">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a></li>
+      <li><a routerLink="/order" routerLinkActive="active">Order Pizza</a></li>
+      <li><a routerLink="/history" routerLinkActive="active">Order History</a></li>
+    </ul>
+    
+    <a routerLink="/order" class="btn btn-primary">Order Now</a>
+  </div>
+</nav>

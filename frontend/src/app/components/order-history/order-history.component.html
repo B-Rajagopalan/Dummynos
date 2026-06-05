@@ -1,0 +1,70 @@
+<div class="history-page">
+  <div class="container animate-fade-in">
+    
+    <div class="history-header">
+      <h2 class="text-gradient">Order History</h2>
+      
+      <div class="search-bar glass">
+        <select [(ngModel)]="searchType" class="form-control search-select">
+          <option value="all">All Orders</option>
+          <option value="pizzaName">By Pizza Name</option>
+          <option value="contactNumber">By Contact Number</option>
+        </select>
+        
+        <input 
+          *ngIf="searchType !== 'all'"
+          type="text" 
+          [(ngModel)]="searchValue" 
+          class="form-control search-input" 
+          placeholder="Enter search value..."
+          (keyup.enter)="onSearch()">
+          
+        <button class="btn btn-primary" (click)="onSearch()">Search</button>
+        <button *ngIf="searchType !== 'all'" class="btn btn-outline" (click)="resetSearch()">Reset</button>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-spinner">
+      Loading orders...
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="alert alert-danger mt-4">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!isLoading && orders.length === 0 && !errorMessage" class="empty-state glass">
+      <h3>No orders found</h3>
+      <p>Looks like there are no orders matching your criteria.</p>
+      <a routerLink="/order" class="btn btn-primary mt-4">Place an Order</a>
+    </div>
+
+    <div class="orders-grid" *ngIf="!isLoading && orders.length > 0">
+      <div class="order-card glass" *ngFor="let order of orders">
+        <div class="order-header">
+          <span class="order-id">Order #{{ order.orderId }}</span>
+          <span class="order-price">${{ order.bill | number:'1.2-2' }}</span>
+        </div>
+        
+        <div class="order-body">
+          <h3 class="pizza-name">{{ order.pizzaName }}</h3>
+          
+          <div class="order-details">
+            <div class="detail-item">
+              <span class="detail-label">Quantity</span>
+              <span class="detail-value">{{ order.quantity }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Contact</span>
+              <span class="detail-value">{{ order.customerContactNumber }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="order-footer">
+          <span class="status-badge success">Completed</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

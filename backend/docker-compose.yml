@@ -1,0 +1,120 @@
+networks:
+  public-net:
+  private-net:
+
+services:
+  redis-cache:
+    image: redis:alpine
+    container_name: redis-cache
+    networks:
+      - private-net 
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # 2. MySQL Database
+#  mysql-db:
+#    image: mysql:8.0
+#    container_name: mysql-db
+#    networks:
+#      - private-net
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      MYSQL_DATABASE: pizza_db
+#      MYSQL_ROOT_PASSWORD: raja
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-praja"]
+#      interval: 5s
+#      timeout: 3s
+#      retries: 10
+
+  # 3. Eureka Server (Starts first)
+  eureka-server:
+    build: ./1001_EurekaServer
+    container_name: eureka-server
+    networks:
+      - private-net
+    ports:
+      - "7090:7090"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "7090"] # Checks if port 7090 is open
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # 4. Config Server (Waits for Eureka to be healthy)
+  config-server:
+    build: ./1021_Config_Server_Eureka
+    container_name: config-server
+    networks:
+      - private-net
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./GitFiles:/git-repo
+    environment:
+      SPRING_PROFILES_ACTIVE: native
+      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: file:///git-repo
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:7090/eureka/
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8888"] # Checks if port 8888 is open
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+
+  # 5. Pizza Producer (Waits for Eureka, Config Server, MySQL, and Redis to be healthy)
+  pizza-producer:
+    build: ./Pizza_Producer
+    container_name: pizza-producer
+    networks:
+      - private-net
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:7090/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      #SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/pizza_db
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/pizza_db
+      SPRING_REDIS_HOST: redis-cache
+      SPRING_REDIS_PORT: 6379
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8081"] # Checks if port 8081 is open
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+
+  # 6. Pizza Consumer (Waits for Eureka, Config Server, and Producer to be healthy)
+  pizza-consumer:
+    build: ./Pizza_Consumer
+    container_name: pizza-consumer
+    networks:
+      - private-net
+      - public-net
+    ports:
+      - "8082:8082"
+    environment:
+      SERVER_PORT: 8082  # Forces consumer to run on port 8082 inside container
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:7090/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      pizza-producer:
+        condition: service_healthy
