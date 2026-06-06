@@ -66,18 +66,31 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
 
 ## 🚀 How to Run the Application
 
-### Option 1: Running with Docker Compose (Recommended)
+### Running with Docker Compose
 
 To run the application using Docker, **Docker must be installed, and the Docker Engine/Desktop must be opened and in a running state**.
 
 1. **Build backend packages (JAR)**:
-   Since each service is a separate Maven project, the `clean package` script must be run inside each microservice's root directory. Run the following commands:
+   Since each service is a separate Maven project, you must run the `clean package` script for each microservice. 
+
+   **For Windows PowerShell:**
+   ```powershell
+   cd backend/1001_EurekaServer; mvn clean package -DskipTests
+   cd ../1021_Config_Server_Eureka; mvn clean package -DskipTests
+   cd ../Pizza_Producer; mvn clean package -DskipTests
+   cd ../Pizza_Consumer; mvn clean package -DskipTests
+   cd ..
+   ```
+
+   **For Command Prompt (CMD) or Git Bash / Linux / macOS:**
    ```bash
    cd backend/1001_EurekaServer && mvn clean package -DskipTests
    cd ../1021_Config_Server_Eureka && mvn clean package -DskipTests
    cd ../Pizza_Producer && mvn clean package -DskipTests
    cd ../Pizza_Consumer && mvn clean package -DskipTests
+   cd ..
    ```
+
    You will get the JAR files in the target folder of each microservice.
    Example: `backend/Pizza_Producer/target/Pizza_Producer-0.0.1-SNAPSHOT.jar`
 
@@ -85,9 +98,9 @@ To run the application using Docker, **Docker must be installed, and the Docker 
    > **Code Changes**: Whenever you make any changes to the source code of any backend microservice, you must re-run the respective `mvn clean package` command to generate the latest JAR files before running Docker Compose to ensure the changes are reflected.
 
 2. **Build and start containers**:
-   Navigate back to the `backend/` directory and start the services using Docker Compose:
+   From the root directory, navigate to the `backend/` directory and start the services using Docker Compose:
    ```bash
-   cd ..
+   cd backend
    docker compose up --build -d
    ```
 3. **Monitor and Manage Containers**:

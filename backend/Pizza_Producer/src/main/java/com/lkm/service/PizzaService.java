@@ -29,6 +29,7 @@ public class PizzaService
 		int idNumber=0;
 		
 		pizzaEntity = copyBeanToEntity(pizzaBean);
+		pizzaEntity.setOrderId(0); // Force auto-increment insert of a new order even if an orderId was supplied in the payload
 		idNumber = pizzaDao.save(pizzaEntity).getOrderId();
 		
 		return idNumber;
