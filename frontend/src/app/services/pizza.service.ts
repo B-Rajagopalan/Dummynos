@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PizzaOrder } from '../models/pizza-order.model';
@@ -8,7 +8,7 @@ import { PizzaOrder } from '../models/pizza-order.model';
 })
 export class PizzaService {
 
-  private baseUrl = '/pizza/controller';
+  private baseUrl = isDevMode() ? '/pizza/controller' : 'http://localhost:8090/pizza/controller';
 
   constructor(private http: HttpClient) { }
 
