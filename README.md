@@ -8,7 +8,10 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
 
 ## 🏗️ Architecture & Component Layout
 
-```
+<table align="center">
+<tr>
+<td>
+<pre>
                   ┌───────────────────────┐
                   │   Angular 17 Client   │ (Port 4200)
                   └───────────┬───────────┘
@@ -43,7 +46,10 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
 │   │  (Service Discovery)  │   │  (Native Profile)     │   │
 │   └───────────────────────┘   └───────────────────────┘   │
 └───────────────────────────────────────────────────────────┘
-```
+</pre>
+</td>
+</tr>
+</table>
 
 ### 📂 Directory Structure
 * **`frontend/`**: Angular 17 Single Page Application.
@@ -177,7 +183,7 @@ Once the backend services are up and running (either via Docker Compose or runni
     }
     ```
 * **GET Orders by Pizza Name**: `POST http://localhost:8090/pizza/controller/getDetailsByPizzaName/{pizzaName}`
-  * Example: `POST http://localhost:8090/pizza/controller/getDetailsByPizzaName/VegMedium`
+  * Example: `POST http://localhost:8090/pizza/controller/getDetailsByPizzaName/BBQ Chicken`
 * **GET Orders by Contact Number**: `POST http://localhost:8090/pizza/controller/getDetailsByContactNumber/{contactNumber}`
   * Example: `POST http://localhost:8090/pizza/controller/getDetailsByContactNumber/9543214753`
 
