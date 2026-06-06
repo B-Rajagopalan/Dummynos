@@ -161,7 +161,7 @@ Once the backend services are up and running (either via Docker Compose or runni
 > If you do not wish to build and run the Angular application locally, the frontend has been compiled and pre-hosted on GitHub Pages:
 > 👉 **[Dummynos Web Portal](https://b-rajagopalan.github.io/Dummynos/)**
 > 
-> *To use the hosted frontend, simply launch the local backend containers on your machine (`docker compose up -d`). The hosted portal will communicate securely with your local API gateway!*
+> *To use the hosted frontend, simply launch the local backend containers on your machine (`docker compose up -d`). The hosted portal will communicate directly with your local API gateway!*
 > 
 > > [!IMPORTANT]
 > > **First-Time Browser Warning:** Since the hosted frontend is served over HTTPS (`https://...`) while requesting data from your local machine over HTTP (`http://localhost:8090`), modern browsers (like Chrome or Edge) will trigger a security prompt asking you to allow local network/insecure content access (Private Network Access). Please **allow/approve** this connection when prompted so the portal can communicate with your local Docker backend.
