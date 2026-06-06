@@ -8,7 +8,7 @@
 		<version>2.7.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.lkm</groupId>
+	<groupId>com.app</groupId>
 	<artifactId>Pizza_Consumer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Application</name>

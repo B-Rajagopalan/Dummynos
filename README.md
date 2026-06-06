@@ -47,8 +47,8 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
 
 ### 📂 Directory Structure
 * **`frontend/`**: Angular 17 Single Page Application.
-* **`backend/1001_EurekaServer`**: Service Registration and Discovery server (running on port `7090`).
-* **`backend/1021_Config_Server_Eureka`**: Config Server hosting dynamic properties in `native` (local file-system) profile (running on port `8888`).
+* **`backend/EurekaServer`**: Service Registration and Discovery server (running on port `7090`).
+* **`backend/ConfigServer`**: Config Server hosting dynamic properties in `native` (local file-system) profile (running on port `8888`).
 * **`backend/GitFiles`**: Configuration properties files read by the Config Server.
 * **`backend/Pizza_Consumer`**: Client-facing public gateway service (running on port `8090`).
 * **`backend/Pizza_Producer`**: Internal business service connected to MySQL and Redis (isolated from public traffic).
@@ -73,23 +73,23 @@ To run the application using Docker, **Docker must be installed, and the Docker 
 1. **Build backend packages (JAR)**:
    Since each service is a separate Maven project, you must run the `clean package` script for each microservice. 
 
-   **For Windows PowerShell:**
-   ```powershell
-   cd backend/1001_EurekaServer; mvn clean package -DskipTests
-   cd ../1021_Config_Server_Eureka; mvn clean package -DskipTests
-   cd ../Pizza_Producer; mvn clean package -DskipTests
-   cd ../Pizza_Consumer; mvn clean package -DskipTests
-   cd ..
-   ```
-
-   **For Command Prompt (CMD) or Git Bash / Linux / macOS:**
-   ```bash
-   cd backend/1001_EurekaServer && mvn clean package -DskipTests
-   cd ../1021_Config_Server_Eureka && mvn clean package -DskipTests
-   cd ../Pizza_Producer && mvn clean package -DskipTests
-   cd ../Pizza_Consumer && mvn clean package -DskipTests
-   cd ..
-   ```
+    **For Windows PowerShell:**
+    ```powershell
+    cd backend/EurekaServer; mvn clean package -DskipTests
+    cd ../ConfigServer; mvn clean package -DskipTests
+    cd ../Pizza_Producer; mvn clean package -DskipTests
+    cd ../Pizza_Consumer; mvn clean package -DskipTests
+    cd ..
+    ```
+ 
+    **For Command Prompt (CMD) or Git Bash / Linux / macOS:**
+    ```bash
+    cd backend/EurekaServer && mvn clean package -DskipTests
+    cd ../ConfigServer && mvn clean package -DskipTests
+    cd ../Pizza_Producer && mvn clean package -DskipTests
+    cd ../Pizza_Consumer && mvn clean package -DskipTests
+    cd ..
+    ```
 
    You will get the JAR files in the target folder of each microservice.
    Example: `backend/Pizza_Producer/target/Pizza_Producer-0.0.1-SNAPSHOT.jar`
@@ -124,8 +124,8 @@ To run the services locally without containerization:
      * Initialize the schema by executing the SQL script found in [Pizza.sql](file:///d:/Git%20projects/Dummynos/backend/Pizza_Producer/src/main/resources/Pizza.sql).
 2. **Run Backend Services**:
    Start each of the backend services individually in your IDE or from the command line in the following order:
-   * **Eureka Registry**: Run the main application in `backend/1001_EurekaServer`.
-   * **Config Server**: Run `backend/1021_Config_Server_Eureka` (reads configuration from `backend/GitFiles`).
+    * **Eureka Registry**: Run the main application in `backend/EurekaServer`.
+    * **Config Server**: Run `backend/ConfigServer` (reads configuration from `backend/GitFiles`).
    * **Pizza Producer**: Run `backend/Pizza_Producer`.
    * **Pizza Consumer**: Run `backend/Pizza_Consumer`.
 

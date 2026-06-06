@@ -37,7 +37,7 @@ services:
 
   # 3. Eureka Server (Starts first)
   eureka-server:
-    build: ./1001_EurekaServer
+    build: ./EurekaServer
     container_name: eureka-server
     networks:
       - private-net
@@ -51,7 +51,7 @@ services:
 
   # 4. Config Server (Waits for Eureka to be healthy)
   config-server:
-    build: ./1021_Config_Server_Eureka
+    build: ./ConfigServer
     container_name: config-server
     networks:
       - private-net
