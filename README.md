@@ -12,7 +12,7 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
                   ┌───────────────────────┐
                   │   Angular 17 Client   │ (Port 4200)
                   └───────────┬───────────┘
-                              │ Proxy (/pizza) -> Port 8090 / 8082
+                              │ Proxy (/pizza) -> Port 8090
                               ▼
 ┌───────────────────────────────────────────────────────────┐
 │ PUBLIC NETWORK                                            │
