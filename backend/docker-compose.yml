@@ -16,21 +16,22 @@ services:
       timeout: 3s
       retries: 5
 
-  # 2. MySQL Database
-  mysql-db:
-    image: mysql:8.0
-    container_name: mysql-db
+  # 2. PostgreSQL Database
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: postgres-db
     networks:
       - private-net
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      MYSQL_DATABASE: pizza_db
-      MYSQL_ROOT_PASSWORD: raja
+      POSTGRES_DB: pizza_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: raja
     volumes:
       - ./Pizza_Producer/src/main/resources/Pizza.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-praja"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pizza_db"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -72,7 +73,7 @@ services:
       eureka-server:
         condition: service_healthy
 
-  # 5. Pizza Producer (Waits for Eureka, Config Server, MySQL, and Redis to be healthy)
+  # 5. Pizza Producer (Waits for Eureka, Config Server, PostgreSQL, and Redis to be healthy)
   pizza-producer:
     build: ./Pizza_Producer
     container_name: pizza-producer
@@ -81,7 +82,7 @@ services:
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:7090/eureka/
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/pizza_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/pizza_db
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
       EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
@@ -97,7 +98,7 @@ services:
         condition: service_healthy
       redis-cache:
         condition: service_healthy
-      mysql-db:
+      postgres-db:
         condition: service_healthy
 
   # 6. Pizza Consumer (Waits for Eureka, Config Server, and Producer to be healthy)

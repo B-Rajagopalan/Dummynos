@@ -39,6 +39,7 @@ public class  Resilience4jController
 	}
 	
 	@CircuitBreaker(name = RESILIENCE4J_CIRCUIT_BREAKER, fallbackMethod = "circuitBreakerCustomFallBack")
+	@RateLimiter(name = RESILIENCE4J_RATE_LIMITER, fallbackMethod = "rateLimiterCustomFallBack")
 	public ResponseEntity<List<PizzaOrderDTOBean>> getallDetailsByPizzaName(String pizzaName)
 	{
 		return myFeignClient.getallDetailsByPizzaName(pizzaName);
@@ -46,6 +47,7 @@ public class  Resilience4jController
 	}
 	
 	@CircuitBreaker(name = RESILIENCE4J_CIRCUIT_BREAKER, fallbackMethod = "circuitBreakerCustomFallBack")
+	@RateLimiter(name = RESILIENCE4J_RATE_LIMITER, fallbackMethod = "rateLimiterCustomFallBack")
 	public ResponseEntity<List<PizzaOrderDTOBean>> getOrderDetailsByContactNumber(String contactNumber)
 	{
 		return myFeignClient.getOrderDetailsByContactNumber(contactNumber);

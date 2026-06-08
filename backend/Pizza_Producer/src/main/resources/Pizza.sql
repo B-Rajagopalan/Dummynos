@@ -1,26 +1,16 @@
-drop database if exists pizza_db;
-
-create database pizza_db;
-
-use pizza_db;
-
 create table IF NOT EXISTS pizza(
-
-orderId int(11) NOT NULL AUTO_INCREMENT,
-
-pizzaName varchar(20),quantity int,
-
-bill double,customerContactNumber varchar(10), PRIMARY KEY(orderId)
-
+    orderId SERIAL PRIMARY KEY,
+    pizzaName varchar(20),
+    quantity int,
+    bill double precision,
+    customerContactNumber varchar(10)
 );
 
 insert into pizza (orderId,pizzaName,quantity,bill,customerContactNumber) values
+  (1001,'Margherita',1,200,'1234567890'),
+  (1002,'Pepperoni',2,400,'9543214753'),
+  (1003,'Veggie Supreme',3,600,'5843919283'),
+  (1004,'Four Cheese',2,400,'3742828282')
+ON CONFLICT (orderId) DO NOTHING;
 
-  (1001,'Margherita',1,200,"1234567890"),
-
-  (1002,'Pepperoni',2,400,"9543214753"),
-
-  (1003,'Veggie Supreme',3,600,"5843919283"),
-
-  (1004,'Four Cheese',2,400,"3742828282");
-commit;
+SELECT setval(pg_get_serial_sequence('pizza', 'orderid'), 1004);

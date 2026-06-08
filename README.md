@@ -38,7 +38,7 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
 │               │ DB Connection             │ Cache Sync    │
 │               ▼                           ▼               │
 │   ┌───────────────────────┐   ┌───────────────────────┐   │
-│   │    MySQL Database     │   │      Redis Cache      │   │
+│   │  PostgreSQL Database  │   │      Redis Cache      │   │
 │   └───────────────────────┘   └───────────────────────┘   │
 │                                                           │
 │   ┌───────────────────────┐   ┌───────────────────────┐   │
@@ -57,7 +57,7 @@ The application features an **Angular 17** frontend client and a **Spring Boot /
 * **`backend/ConfigServer`**: Config Server hosting dynamic properties in `native` (local file-system) profile (running on port `8888`).
 * **`backend/GitFiles`**: Configuration properties files read by the Config Server.
 * **`backend/Pizza_Consumer`**: Client-facing public gateway service (running on port `8090`).
-* **`backend/Pizza_Producer`**: Internal business service connected to MySQL and Redis (isolated from public traffic).
+* **`backend/Pizza_Producer`**: Internal business service connected to PostgreSQL and Redis (isolated from public traffic).
 
 ---
 
@@ -124,9 +124,9 @@ To run the services locally without containerization:
 
 1. **Prerequisites & Databases Setup**:
    * **Redis**: Ensure a Redis instance is running locally on port `6379`.
-   * **MySQL Setup**: A local MySQL server instance running on port `3306` is required:
+   * **PostgreSQL Setup**: A local PostgreSQL server instance running on port `5432` is required:
      * Create a database named `pizza_db`.
-     * Ensure the username is `root` and password is `raja` (default credentials). If using different credentials, update them in [pizzaproducer.properties](file:///d:/Git%20projects/Dummynos/backend/GitFiles/pizzaproducer.properties).
+     * Ensure the username is `postgres` and password is `raja` (default credentials). If using different credentials, update them in [pizzaproducer.properties](file:///d:/Git%20projects/Dummynos/backend/GitFiles/pizzaproducer.properties).
      * Initialize the schema by executing the SQL script found in [Pizza.sql](file:///d:/Git%20projects/Dummynos/backend/Pizza_Producer/src/main/resources/Pizza.sql).
 2. **Run Backend Services**:
    Start each of the backend services individually in your IDE or from the command line in the following order:
