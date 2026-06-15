@@ -42,7 +42,7 @@
       <div class="order-card glass" *ngFor="let order of orders">
         <div class="order-header">
           <span class="order-id">Order #{{ order.orderId }}</span>
-          <span class="order-price">${{ order.bill | number:'1.2-2' }}</span>
+          <span class="order-price">₹{{ order.bill | number:'1.2-2' }}</span>
         </div>
         
         <div class="order-body">
@@ -61,7 +61,17 @@
         </div>
         
         <div class="order-footer">
-          <span class="status-badge success">Completed</span>
+          <span class="status-badge" [class.success]="getOrderStatus(order.orderId) === 'completed'" [class.warning]="getOrderStatus(order.orderId) === 'pending'">
+            {{ getOrderStatus(order.orderId) === 'completed' ? 'Completed' : 'Pending' }}
+          </span>
+          
+          <label class="status-toggle">
+            <input 
+              type="checkbox" 
+              [checked]="getOrderStatus(order.orderId) === 'completed'" 
+              (change)="toggleOrderStatus(order.orderId)">
+            <span class="toggle-label">Mark Completed</span>
+          </label>
         </div>
       </div>
     </div>

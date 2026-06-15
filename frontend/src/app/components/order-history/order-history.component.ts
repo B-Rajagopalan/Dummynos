@@ -15,10 +15,40 @@ export class OrderHistoryComponent implements OnInit {
   searchType = 'all'; // 'all', 'pizzaName', 'contactNumber'
   searchValue = '';
 
+  orderStatuses: { [orderId: number]: 'pending' | 'completed' } = {};
+
   constructor(private pizzaService: PizzaService) {}
 
   ngOnInit(): void {
+    this.loadStatusesFromStorage();
     this.fetchAllOrders();
+  }
+
+  loadStatusesFromStorage(): void {
+    const stored = localStorage.getItem('dummynos_order_statuses');
+    if (stored) {
+      try {
+        this.orderStatuses = JSON.parse(stored);
+      } catch (e) {
+        this.orderStatuses = {};
+      }
+    }
+  }
+
+  saveStatusesToStorage(): void {
+    localStorage.setItem('dummynos_order_statuses', JSON.stringify(this.orderStatuses));
+  }
+
+  getOrderStatus(orderId?: number): 'pending' | 'completed' {
+    if (!orderId) return 'pending';
+    return this.orderStatuses[orderId] || 'pending';
+  }
+
+  toggleOrderStatus(orderId?: number): void {
+    if (!orderId) return;
+    const current = this.getOrderStatus(orderId);
+    this.orderStatuses[orderId] = current === 'pending' ? 'completed' : 'pending';
+    this.saveStatusesToStorage();
   }
 
   fetchAllOrders(): void {

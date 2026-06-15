@@ -1,92 +1,151 @@
 <div class="order-page">
   <div class="container animate-fade-in">
-    <div class="form-wrapper glass">
-      <h2 class="text-gradient">Create Your Order</h2>
-      <p class="subtitle">Customize your perfect pizza</p>
+    <div class="order-grid">
+      
+      <!-- Left Column: Form -->
+      <div class="form-wrapper glass">
+        <h2 class="text-gradient">Create Your Order</h2>
+        <p class="subtitle">Customize and place your order instantly</p>
 
-      <div *ngIf="successMessage" class="alert alert-success">
-        {{ successMessage }}
-      </div>
+        <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+          
 
-      <div *ngIf="errorMessage" class="alert alert-danger">
-        {{ errorMessage }}
-      </div>
-
-      <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="pizzaName">Pizza Name</label>
-          <input 
-            type="text" 
-            id="pizzaName" 
-            formControlName="pizzaName" 
-            class="form-control" 
-            list="pizzaSuggestions"
-            placeholder="e.g. Margherita"
-            [class.is-invalid]="orderForm.get('pizzaName')?.invalid && orderForm.get('pizzaName')?.touched">
-          <datalist id="pizzaSuggestions">
-            <option *ngFor="let pizza of famousPizzas" [value]="pizza"></option>
-          </datalist>
-          <span class="invalid-feedback" *ngIf="orderForm.get('pizzaName')?.invalid && orderForm.get('pizzaName')?.touched">
-            Pizza Name is required.
-          </span>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col">
-            <label for="quantity">Quantity</label>
-            <input 
-              type="number" 
-              id="quantity" 
-              formControlName="quantity" 
-              class="form-control" 
-              min="1"
-              (change)="updateBill()"
-              [class.is-invalid]="orderForm.get('quantity')?.invalid && orderForm.get('quantity')?.touched">
-            <span class="invalid-feedback" *ngIf="orderForm.get('quantity')?.errors?.['required'] && orderForm.get('quantity')?.touched">
-              Quantity is required.
-            </span>
-            <span class="invalid-feedback" *ngIf="orderForm.get('quantity')?.errors?.['min'] && orderForm.get('quantity')?.touched">
-              Quantity must be at least 1.
+          <!-- Pizza Selector -->
+          <div class="form-group">
+            <label for="pizzaName" class="form-label-premium">Pizza Selection</label>
+            <select 
+              id="pizzaName" 
+              formControlName="pizzaName" 
+              class="form-control-premium" 
+              [class.is-invalid]="orderForm.get('pizzaName')?.invalid && orderForm.get('pizzaName')?.touched">
+              <option value="" disabled selected>Select a pizza...</option>
+              <option *ngFor="let pizza of pizzaDetails" [value]="pizza.name">
+                {{ pizza.emoji }} {{ pizza.name }} — {{ currencySymbols[selectedCurrency] }}{{ (pizza.basePrice * (exchangeRates[selectedCurrency] || 1)).toFixed(2) }}
+              </option>
+            </select>
+            <span class="invalid-feedback" *ngIf="orderForm.get('pizzaName')?.invalid && orderForm.get('pizzaName')?.touched">
+              Please select a pizza.
             </span>
           </div>
 
-          <div class="form-group col">
-            <label for="bill">Bill Amount ($)</label>
+          <div class="form-row">
+            <!-- Quantity Selection -->
+            <div class="form-group col">
+              <label for="quantity" class="form-label-premium">Quantity</label>
+              <input 
+                type="number" 
+                id="quantity" 
+                formControlName="quantity" 
+                class="form-control-premium" 
+                min="1"
+                [class.is-invalid]="orderForm.get('quantity')?.invalid && orderForm.get('quantity')?.touched">
+              <span class="invalid-feedback" *ngIf="orderForm.get('quantity')?.errors?.['required'] && orderForm.get('quantity')?.touched">
+                Quantity is required.
+              </span>
+              <span class="invalid-feedback" *ngIf="orderForm.get('quantity')?.errors?.['min'] && orderForm.get('quantity')?.touched">
+                Must be at least 1.
+              </span>
+            </div>
+
+            <!-- Bill Amount (Calculated in real-time) -->
+            <div class="form-group col">
+              <label for="bill" class="form-label-premium">Total Bill ({{ selectedCurrency }})</label>
+              <div class="input-with-symbol">
+                <span class="currency-prefix">{{ currencySymbols[selectedCurrency] }}</span>
+                <input 
+                  type="number" 
+                  id="bill" 
+                  formControlName="bill" 
+                  class="form-control-premium bill-input" 
+                  readonly
+                  [class.is-invalid]="orderForm.get('bill')?.invalid && orderForm.get('bill')?.touched">
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Contact -->
+          <div class="form-group">
+            <label for="customerContactNumber" class="form-label-premium">Contact Number</label>
             <input 
-              type="number" 
-              id="bill" 
-              formControlName="bill" 
-              class="form-control" 
-              step="0.01"
-              [class.is-invalid]="orderForm.get('bill')?.invalid && orderForm.get('bill')?.touched">
-            <span class="invalid-feedback" *ngIf="orderForm.get('bill')?.invalid && orderForm.get('bill')?.touched">
-              Bill amount is required.
+              type="text" 
+              id="customerContactNumber" 
+              formControlName="customerContactNumber" 
+              class="form-control-premium" 
+              placeholder="Enter 10-digit phone number"
+              [class.is-invalid]="orderForm.get('customerContactNumber')?.invalid && orderForm.get('customerContactNumber')?.touched">
+            <span class="invalid-feedback" *ngIf="orderForm.get('customerContactNumber')?.errors?.['required'] && orderForm.get('customerContactNumber')?.touched">
+              Contact Number is required.
+            </span>
+            <span class="invalid-feedback" *ngIf="orderForm.get('customerContactNumber')?.errors?.['pattern'] && orderForm.get('customerContactNumber')?.touched">
+              Contact Number must be exactly 10 digits.
             </span>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="customerContactNumber">Contact Number</label>
-          <input 
-            type="text" 
-            id="customerContactNumber" 
-            formControlName="customerContactNumber" 
-            class="form-control" 
-            placeholder="10 digit number"
-            [class.is-invalid]="orderForm.get('customerContactNumber')?.invalid && orderForm.get('customerContactNumber')?.touched">
-          <span class="invalid-feedback" *ngIf="orderForm.get('customerContactNumber')?.errors?.['required'] && orderForm.get('customerContactNumber')?.touched">
-            Contact Number is required.
-          </span>
-          <span class="invalid-feedback" *ngIf="orderForm.get('customerContactNumber')?.errors?.['pattern'] && orderForm.get('customerContactNumber')?.touched">
-            Contact Number must be exactly 10 digits.
-          </span>
-        </div>
+          <button type="submit" class="btn btn-primary w-100 mt-4" [disabled]="isSubmitting">
+            <span *ngIf="isSubmitting">Processing Order...</span>
+            <span *ngIf="!isSubmitting">Confirm & Place Order</span>
+          </button>
+        </form>
+      </div>
 
-        <button type="submit" class="btn btn-primary w-100 mt-4" [disabled]="isSubmitting">
-          <span *ngIf="isSubmitting">Processing...</span>
-          <span *ngIf="!isSubmitting">Place Order</span>
-        </button>
-      </form>
+      <!-- Right Column: Pizza Detail Visualizer -->
+      <div class="info-sidebar">
+        
+        <!-- Pizza Description Card -->
+        <div class="pizza-details-card glass-dark fade-in" *ngIf="selectedPizza; else noPizzaSelected">
+          <div class="pizza-header">
+            <span class="pizza-emoji">{{ selectedPizza.emoji }}</span>
+            <div class="pizza-title-desc">
+              <h3>{{ selectedPizza.name }}</h3>
+              <p class="pizza-description">{{ selectedPizza.description }}</p>
+            </div>
+          </div>
+          
+          <div class="divider"></div>
+          
+          <div class="pizza-ingredients">
+            <h4>Fresh Ingredients</h4>
+            <div class="ingredients-list">
+              <span class="ingredient-badge" *ngFor="let ing of selectedPizza.ingredients">
+                ✔ {{ ing }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="divider"></div>
+          
+          <div class="pizza-pricing-breakdown">
+            <div class="price-row final-price">
+              <span>Unit Price:</span>
+              <span class="cost-value text-gradient">
+                {{ currencySymbols[selectedCurrency] }}{{ (selectedPizza.basePrice * (exchangeRates[selectedCurrency] || 1)).toFixed(2) }}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fallback Placeholder Card -->
+        <ng-template #noPizzaSelected>
+          <div class="pizza-details-card glass-dark empty-card">
+            <div class="empty-state">
+              <span class="pizza-emoji empty-emoji">🍕</span>
+              <h3>No Pizza Selected</h3>
+              <p>Select a pizza flavor to view its description and fresh ingredients in real time.</p>
+            </div>
+          </div>
+        </ng-template>
+
+      </div>
+
     </div>
   </div>
 </div>
+
+<!-- Animated Toast Feedback Message -->
+<div class="toast-notification" [class.show]="toast.type" [ngClass]="toast.type || ''">
+  <div class="toast-content">
+    <span class="toast-icon">{{ toast.type === 'success' ? '✨' : '⚠️' }}</span>
+    <span class="toast-message">{{ toast.message }}</span>
+  </div>
+</div>
+

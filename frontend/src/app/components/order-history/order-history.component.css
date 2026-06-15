@@ -112,6 +112,9 @@
   padding: 1rem 1.5rem;
   background: var(--gray);
   border-top: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .status-badge {
@@ -120,11 +123,38 @@
   border-radius: 50px;
   font-size: 0.8rem;
   font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .status-badge.success {
   background: rgba(40, 167, 69, 0.1);
   color: #28a745;
+}
+
+.status-badge.warning {
+  background: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+}
+
+.status-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.status-toggle input[type="checkbox"] {
+  accent-color: #28a745;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.toggle-label {
+  font-size: 0.85rem;
+  color: #555555;
+  font-weight: 600;
 }
 
 .empty-state {

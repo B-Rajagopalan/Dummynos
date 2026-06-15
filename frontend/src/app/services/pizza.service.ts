@@ -27,4 +27,8 @@ export class PizzaService {
   getDetailsByContactNumber(contactNumber: string): Observable<PizzaOrder[]> {
     return this.http.post<PizzaOrder[]>(`${this.baseUrl}/getDetailsByContactNumber/${contactNumber}`, {});
   }
+
+  getExchangeRates(): Observable<any> {
+    return this.http.get('https://open.er-api.com/v6/latest/USD');
+  }
 }
